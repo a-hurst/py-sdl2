@@ -1,9 +1,27 @@
 #!/usr/bin/env python
 import os
 import sys
+import subprocess as sub
 from distutils.core import setup
 
 VERSION = "0.9.6"
+
+
+if sys.platform in ['win32', 'darwin']:
+
+    # Fetches patched pysdl2 that auto-loads these DLLs, if available
+    # Only necessary until official pysdl2 support comes along
+
+    sdl2dll_url = 'git+https://github.com/a-hurst/pysdl2-dll@master'
+
+    try:
+        import sdl2dll
+    except ImportError:
+        install_cmd = [sys.executable, '-m', 'pip', 'install', '--upgrade', sdl2dll_url]
+        if '--user' in sys.argv:
+            install_cmd.insert(5, '--user')
+        sub.check_call(install_cmd)
+
 
 if __name__ == "__main__":
 

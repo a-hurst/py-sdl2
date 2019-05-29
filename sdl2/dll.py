@@ -5,6 +5,11 @@ import warnings
 from ctypes import CDLL
 from ctypes.util import find_library
 
+try:
+    import sdl2dll
+except ImportError:
+    pass
+
 __all__ = ["DLL", "nullfunc"]
 
 
