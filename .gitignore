@@ -1,5 +1,6 @@
 .cache
 .settings
+**/*.DS_Store
 *project
 *.pyc
 *.pyo
@@ -11,3 +12,4 @@ dlls
 dist
 build
 doc/html
+doc/_build

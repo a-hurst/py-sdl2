@@ -149,7 +149,7 @@ def draw_rects(context, width, height):
         color = randint(0, 0xFFFFFFFF)
         x0, x1 = randint(whalf + lw, width), randint(whalf + lw, width)
         y0, y1 = randint(hhalf + lw, height), randint(hhalf + lw, height)
-        r = randint(1, max(x1 - x0, x0 - x1))
+        r = randint(0, max(x1 - x0, x0 - x1))
         sdl2.sdlgfx.roundedBoxColor(context.sdlrenderer, x0, y0, x1, y1, r,
                                     color)
 
@@ -293,8 +293,25 @@ def run():
     window.show()
 
     # Create a rendering context for the window. The sdlgfx module requires it.
-    context = sdl2.ext.Renderer(window)
+    # NOTE: Defaults to software rendering to avoid flickering on some systems.
+    if "-hardware" in sys.argv:
+        renderflags = sdl2.render.SDL_RENDERER_ACCELERATED | sdl2.render.SDL_RENDERER_PRESENTVSYNC
+    else:
+        renderflags = sdl2.render.SDL_RENDERER_SOFTWARE
+    context = sdl2.ext.Renderer(window, flags=renderflags)
 
+    # Retrieve and display renderer + available renderer info
+    info = sdl2.render.SDL_RendererInfo()
+    sdl2.SDL_GetRendererInfo(context.sdlrenderer, info)
+
+    print("\nUsing renderer: {0}".format(info.name.decode('utf-8')))
+    print("\nAvailable renderers:")
+    num_drivers = sdl2.SDL_GetNumRenderDrivers()
+    for i in range(0, num_drivers):
+        info = sdl2.render.SDL_RendererInfo()
+        sdl2.SDL_GetRenderDriverInfo(i, info)
+        print(" - " + info.name.decode('utf-8'))
+        
     # We implement the functionality as it was done in colorpalettes.py and
     # utilise a mapping table to look up the function to be executed, together
     # with the arguments they should receive
@@ -311,6 +328,7 @@ def run():
     # which function to execute next.
     curindex = 0
     draw_lines(context, 800, 600)
+    context.present()
 
     # The event loop is nearly the same as we used in colorpalettes.py. If you
     # do not know, what happens here, take a look at colorpalettes.py for a
