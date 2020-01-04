@@ -4,12 +4,14 @@ matrix:
   fast_finish: true
   include:
     - os: linux
+      dist: bionic
       sudo: required
       python: 2.7
     - os: linux
       sudo: required
       python: 3.5
     - os: linux
+      dist: bionic
       sudo: required
       python: 3.6
     - os: linux
