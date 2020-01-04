@@ -45,10 +45,10 @@ matrix:
       env: PYVER=2
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh .ci/install-linux-deps.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libsdl2 libsdl2-mixer libsdl2-ttf libsdl2-image libsdl2-gfx; fi
   - pip install -U pip
   - pip install git+https://github.com/a-hurst/pysdl2-dll.git
-  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print sdl2dll.get_dllpath()")
+  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print(sdl2dll.get_dllpath())")
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh .ci/install-osx-deps.sh; fi
 
 install:

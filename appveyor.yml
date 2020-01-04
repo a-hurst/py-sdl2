@@ -4,33 +4,23 @@ environment:
   SDL_RENDER_DRIVER: software
   matrix:
     - PYTHON: "C:\\Python27"
-      PYSDL2_DLL_PATH: "dlls\\32bit"
     - PYTHON: "C:\\Python27-x64"
-      PYSDL2_DLL_PATH: "dlls\\64bit"
-    - PYTHON: "C:\\Python34"
-      PYSDL2_DLL_PATH: "dlls\\32bit"
-    - PYTHON: "C:\\Python34-x64"
-      PYSDL2_DLL_PATH: "dlls\\64bit"
     - PYTHON: "C:\\Python35"
-      PYSDL2_DLL_PATH: "dlls\\32bit"
-    - PYTHON: "C:\\Python35-x64"
-      PYSDL2_DLL_PATH: "dlls\\64bit"
     - PYTHON: "C:\\Python36"
-      PYSDL2_DLL_PATH: "dlls\\32bit"
-    - PYTHON: "C:\\Python36-x64"
-      PYSDL2_DLL_PATH: "dlls\\64bit"
-
-cache:
-  - dlls -> .ci\\install-win-deps.cmd
+    - PYTHON: "C:\\Python37"
+    - PYTHON: "C:\\Python38"
+    - PYTHON: "C:\\Python38-x64"
 
 install:
-  - IF NOT EXIST dlls\\32bit\\SDL2.dll .ci\\install-win-deps.cmd
-  - "%PYTHON%\\python.exe -m pip install -U pip"
-  - "%PYTHON%\\python.exe -m pip install -U numpy"
-  - "%PYTHON%\\python.exe -m pip install -U pytest"
-  - "%PYTHON%\\python.exe -m pip install ."
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "pip install -U pip"
+  - "pip install git+https://github.com/a-hurst/pysdl2-dll.git"
+  - "python -c 'import sdl2dll; print(sdl2dll.get_dllpath())' > dllpath.txt"
+  - "set /p PYSDL2_DLL_PATH=<dllpath.txt"
+  - "pip install -U numpy pytest"
+  - "pip install ."
 
 build: off
 
 test_script:
-  - "%PYTHON%\\python.exe -B -m pytest -v"
+  - "python -B -m pytest -v"
