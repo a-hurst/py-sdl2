@@ -9,7 +9,7 @@ SDLGFX_LIB=SDL2_gfx-1.0.3
 
 
 sudo apt-get -qq update
-sudo apt-get build-dep libsdl2 libsdl2-mixer libsdl2-ttf libsdl2-image libsdl2-gfx
+sudo apt-get install libsdl2 libsdl2-mixer libsdl2-ttf libsdl2-image libsdl2-gfx
 #sudo apt-get install build-essential mercurial make cmake autoconf automake \
 #    libtool libasound2-dev libpulse-dev libaudio-dev libx11-dev libxext-dev \
 #    libxrandr-dev libxcursor-dev libxi-dev libxinerama-dev libxxf86vm-dev \
