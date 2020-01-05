@@ -4,67 +4,72 @@ matrix:
   fast_finish: true
   include:
     - os: linux
-      dist: bionic
-      sudo: required
-      python: 2.7
-    - os: linux
-      sudo: required
-      python: 3.5
-    - os: linux
-      dist: bionic
-      sudo: required
-      python: 3.6
-    - os: linux
-      sudo: required
-      python: 3.7
-    - os: linux
-      sudo: required
-      python: 3.8
-    - os: linux
-      sudo: required
-      python: pypy
-    - os: linux
-      sudo: required
-      python: pypy3
+      services: docker
+#      dist: bionic
+#      sudo: required
+#      python: 2.7
+#    - os: linux
+#      sudo: required
+#      python: 3.5
+#    - os: linux
+#      dist: bionic
+#      sudo: required
+#      python: 3.6
+#    - os: linux
+#      sudo: required
+#      python: 3.7
+#    - os: linux
+#      sudo: required
+#      python: 3.8
+#    - os: linux
+#      sudo: required
+#      python: pypy
+#    - os: linux
+#      sudo: required
+#      python: pypy3
+#    - os: osx
+#      language: shell
+#      env: PYVER=3
     - os: osx
-      language: generic
-      env: PYVER=3
-    - os: osx
-      language: generic
+      language: shell
       env: PYVER=2
-  allow_failures:
-    - os: linux
-      sudo: required
-      python: pypy
-    - os: linux
-      sudo: required
-      python: pypy3
-    - os: osx
-      language: generic
-      env: PYVER=3
-    - os: osx
-      language: generic
-      env: PYVER=2
+#  allow_failures:
+#    - os: linux
+#      sudo: required
+#      python: pypy
+#    - os: linux
+#      sudo: required
+#      python: pypy3
+#    - os: osx
+#      language: shell
+#      env: PYVER=3
+#    - os: osx
+#      language: shell
+#      env: PYVER=2
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-gfx-1.0-0; fi
-  - pip install -U pip
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-gfx-1.0-0; fi
+#  - pip install -U pip
 #  - pip install git+https://github.com/a-hurst/pysdl2-dll.git
 #  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print(sdl2dll.get_dllpath())")
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_ttf sdl2_mixer sdl2_image sdl2_gfx; fi
+  - pip install cibuildwheel==1.1.0
 
 install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh .ci/venv-osx.sh; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source pysdl2-venv/bin/activate; fi
-  - pip install -U numpy
-  - pip install -U pytest
-  - pip install .
+  - python -m cibuildwheel --output-dir wheelhouse
 
 env:
   global:
   - SDL_VIDEODRIVER=dummy
   - SDL_AUDIODRIVER=dummy
   - SDL_RENDER_DRIVER=software
+  - CIBW_TEST_REQUIRES='numpy pytest'
+  - CIBW_TEST_COMMAND='python -B -m pytest -v'
+  - CIBW_MANYLINUX_X86_64_IMAGE=manylinux2014
+  - CIBW_MANYLINUX_I686_IMAGE=manylinux2014
+  - CIBW_BEFORE_BUILD_LINUX='yum install -y SDL2 SDL2_ttf SDL2_mixer SDL2_image SDL2_gfx'
 
-script:
-  - python -B -m pytest -v
+#script:
+#  - python -B -m pytest -v
