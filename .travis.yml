@@ -55,7 +55,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_ttf sdl2_mixer sdl2_image sdl2_gfx; fi
 
 install:
-  - python -m pip --upgrade pip
+  - python -m pip install --upgrade pip
   - python -m pip install cibuildwheel==1.1.0
 
 script:
