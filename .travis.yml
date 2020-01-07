@@ -72,7 +72,7 @@ env:
   - CIBW_TEST_COMMAND='pytest -v'
   - CIBW_MANYLINUX_X86_64_IMAGE=manylinux2014
   - CIBW_MANYLINUX_I686_IMAGE=manylinux2014
-  - CIBW_BEFORE_BUILD_LINUX='./.ci/install-linux-deps.sh'
+  - CIBW_BEFORE_BUILD_LINUX='chmod +x ./.ci/install-linux-deps.sh && /bin/bash ./.ci/install-linux-deps.sh'
 
 #script:
 #  - python -B -m pytest -v
