@@ -7,18 +7,18 @@ SDLMIXER_LIB=SDL2_mixer-2.0.2
 SDLIMAGE_LIB=SDL2_image-2.0.3
 SDLGFX_LIB=SDL2_gfx-1.0.3
 
-if [[ -d /build_scripts ]] # i.e. if manylinux image
+if [[ -d /opt/python/cp36-cp36m/bin ]] # i.e. if manylinux image
 then
     if [[ ! -d /opt/python/cp27-cp27m ]]
     then
-        source /build_scripts/build_env.sh
-        source /build_scripts/build_utils.sh
+        source ./manylinux/docker/build_scripts/build_env.sh
+        source ./manylinux/docker/build_scripts/build_utils.sh
         build_cpython "2.7"
     fi
     yum install -y SDL2 SDL2_ttf SDL2_mixer SDL2_image SDL2_gfx
 else
-    sudo apt-get -qq update
-    sudo apt-get build-dep libsdl2 libsdl2-mixer libsdl2-ttf libsdl2-image libsdl2-gfx
+    #sudo apt-get -qq update
+    #sudo apt-get build-dep libsdl2 libsdl2-mixer libsdl2-ttf libsdl2-image libsdl2-gfx
 
     wget https://www.libsdl.org/release/$SDL_LIB.tar.gz
     tar xzf $SDL_LIB.tar.gz

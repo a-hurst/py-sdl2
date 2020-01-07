@@ -53,6 +53,7 @@ before_install:
 #  - pip install git+https://github.com/a-hurst/pysdl2-dll.git
 #  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print(sdl2dll.get_dllpath())")
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_ttf sdl2_mixer sdl2_image sdl2_gfx; fi
+  - git clone -b manylinux2014 https://github.com/pypa/manylinux.git
 
 install:
   - python -m pip install --upgrade pip
