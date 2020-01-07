@@ -63,17 +63,16 @@ script:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source pysdl2-venv/bin/activate; fi
   - python -m cibuildwheel --output-dir wheelhouse
 
-
 env:
   global:
   - SDL_VIDEODRIVER=dummy
   - SDL_AUDIODRIVER=dummy
   - SDL_RENDER_DRIVER=software
   - CIBW_TEST_REQUIRES='numpy pytest'
-  - CIBW_TEST_COMMAND='python -B -m pytest -v'
+  - CIBW_TEST_COMMAND='pytest -v'
   - CIBW_MANYLINUX_X86_64_IMAGE=manylinux2014
   - CIBW_MANYLINUX_I686_IMAGE=manylinux2014
-  - CIBW_BEFORE_BUILD_LINUX='yum install -y SDL2 SDL2_ttf SDL2_mixer SDL2_image SDL2_gfx'
+  - CIBW_BEFORE_BUILD_LINUX='./.ci/install-linux-deps.sh'
 
 #script:
 #  - python -B -m pytest -v
