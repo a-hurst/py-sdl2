@@ -85,16 +85,24 @@ class SDLSurfaceTest(unittest.TestCase):
     def test_SDL_ConvertSurface(self):
         bad_combos = []
         good_combos = []
-        error.SDL_ClearError()
+        tenbit = [pixels.SDL_PACKEDLAYOUT_2101010, pixels.SDL_PACKEDLAYOUT_1010102]
         for idx in pixels.ALL_PIXELFORMATS:
-            if pixels.SDL_ISPIXELFORMAT_FOURCC(idx) or pixels.SDL_BITSPERPIXEL(idx) < 8:
-                continue
-            pfmt = pixels.SDL_AllocFormat(idx)
             for fmt in pixels.ALL_PIXELFORMATS:
-                if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
+                # Some pixel format conversions aren't supported in SDL2, so we skip those
+                for f in (idx, fmt):
+                    if pixels.SDL_ISPIXELFORMAT_FOURCC(f) or pixels.SDL_PIXELLAYOUT(f) in tenbit:
+                        continue
+                # SDL2 doesn't support converting to formats w/ less than 8 bpp
+                if pixels.SDL_BITSPERPIXEL(idx) < 8:
                     continue
+                # SDL2 doesn't support converting from indexed formats w/ 4 bpp
+                if pixels.SDL_PIXELTYPE(fmt) == pixels.SDL_PIXELTYPE_INDEX4:
+                    continue
+
                 idx_name = pixels.SDL_GetPixelFormatName(idx).decode('utf-8')
                 fmt_name = pixels.SDL_GetPixelFormatName(fmt).decode('utf-8')
+                pfmt = pixels.SDL_AllocFormat(idx)
+
                 bpp = c_int()
                 rmask, gmask, bmask, amask = Uint32(), Uint32(), Uint32(), Uint32()
                 ret = pixels.SDL_PixelFormatEnumToMasks(fmt, byref(bpp),
@@ -105,18 +113,18 @@ class SDLSurfaceTest(unittest.TestCase):
                                                   bmask, amask)
                 self.assertIsInstance(sf.contents, surface.SDL_Surface)
                 csf = surface.SDL_ConvertSurface(sf, pfmt, 0)
-                #self.assertTrue(csf)
+                self.assertTrue(csf)
                 if error.SDL_GetError() == b'Blit combination not supported':
                     bad_combos.append('{0} -> {1}'.format(fmt_name, idx_name))
                     error.SDL_ClearError()
                 else:
                     good_combos.append('{0} -> {1}'.format(fmt_name, idx_name))
-                #self.assertIsInstance(csf.contents, surface.SDL_Surface)
+                    self.assertIsInstance(csf.contents, surface.SDL_Surface)
                 surface.SDL_FreeSurface(sf)
                 surface.SDL_FreeSurface(csf)
             pixels.SDL_FreeFormat(pfmt)
 
-        self.assertEqual(len(bad_combos), 0)
+        self.assertEqual(len(bad_combos), -1)
         #######################################################################
         # sf = surface.create_rgb_surface(10, 10, 32, 0, 0, 0)
         # self.assertRaises((AttributeError, TypeError),
@@ -143,8 +151,8 @@ class SDLSurfaceTest(unittest.TestCase):
             for fmt in pixels.ALL_PIXELFORMATS:
                 if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
                     continue
-                pfmt_name = pixels.SDL_GetPixelFormatName(pfmt)
-                fmt_name = pixels.SDL_GetPixelFormatName(fmt)
+                pfmt_name = pixels.SDL_GetPixelFormatName(pfmt).decode('utf-8')
+                fmt_name = pixels.SDL_GetPixelFormatName(fmt).decode('utf-8')
                 bpp = c_int()
                 rmask, gmask, bmask, amask = Uint32(), Uint32(), Uint32(), Uint32()
                 ret = pixels.SDL_PixelFormatEnumToMasks(fmt, byref(bpp),
