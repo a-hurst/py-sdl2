@@ -83,6 +83,7 @@ class SDLSurfaceTest(unittest.TestCase):
                 self.assertEqual(val, src.view[index])
 
     def test_SDL_ConvertSurface(self):
+        bad_combos = []
         for idx in pixels.ALL_PIXELFORMATS:
             if pixels.SDL_ISPIXELFORMAT_FOURCC(idx) or pixels.SDL_BITSPERPIXEL(idx) < 8:
                 continue
@@ -90,8 +91,8 @@ class SDLSurfaceTest(unittest.TestCase):
             for fmt in pixels.ALL_PIXELFORMATS:
                 if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
                     continue
-                idx_name = pixels.SDL_GetPixelFormatName(idx)
-                fmt_name = pixels.SDL_GetPixelFormatName(fmt)
+                idx_name = pixels.SDL_GetPixelFormatName(idx).decode('utf-8')
+                fmt_name = pixels.SDL_GetPixelFormatName(fmt).decode('utf-8')
                 bpp = c_int()
                 rmask, gmask, bmask, amask = Uint32(), Uint32(), Uint32(), Uint32()
                 ret = pixels.SDL_PixelFormatEnumToMasks(fmt, byref(bpp),
@@ -102,11 +103,14 @@ class SDLSurfaceTest(unittest.TestCase):
                                                   bmask, amask)
                 self.assertIsInstance(sf.contents, surface.SDL_Surface)
                 csf = surface.SDL_ConvertSurface(sf, pfmt, 0)
-                self.assertTrue(csf, error.SDL_GetError())
+                #self.assertTrue(csf)
+                if error.SDL_GetError() == b'Blit combination not supported':
+                    bad_combos.append('{0} -> {1}'.format(fmt_name, idx_name))
                 self.assertIsInstance(csf.contents, surface.SDL_Surface)
                 surface.SDL_FreeSurface(sf)
                 surface.SDL_FreeSurface(csf)
             pixels.SDL_FreeFormat(pfmt)
+        print('\n'.join(bad_combos))
 
         #######################################################################
         # sf = surface.create_rgb_surface(10, 10, 32, 0, 0, 0)
@@ -129,7 +133,7 @@ class SDLSurfaceTest(unittest.TestCase):
 
     def test_SDL_ConvertSurfaceFormat(self):
         for pfmt in pixels.ALL_PIXELFORMATS:
-            if pixels.SDL_ISPIXELFORMAT_FOURCC(pfmt) or pixels.SDL_BITSPERPIXEL(pfmt) < 8:
+            if pixels.SDL_ISPIXELFORMAT_FOURCC(pfmt):
                 continue
             for fmt in pixels.ALL_PIXELFORMATS:
                 if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
