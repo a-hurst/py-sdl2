@@ -4,19 +4,33 @@ environment:
   SDL_RENDER_DRIVER: software
   matrix:
     - PYTHON: "C:\\Python27"
+      ARCH: 32
     - PYTHON: "C:\\Python27-x64"
-    - PYTHON: "C:\\Python35"
-    - PYTHON: "C:\\Python36"
-    - PYTHON: "C:\\Python37"
+      ARCH: 64
+    - PYTHON: "C:\\Python35-x64"
+      ARCH: 64
+    - PYTHON: "C:\\Python36-x64"
+      ARCH: 64
+    - PYTHON: "C:\\Python37-x64"
+      ARCH: 64
     - PYTHON: "C:\\Python38"
+      ARCH: 32
     - PYTHON: "C:\\Python38-x64"
+      ARCH: 64
+
+cache:
+  - c:\Tools\vcpkg\installed
 
 install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "pip install -U pip"
-  - "pip install git+https://github.com/a-hurst/pysdl2-dll.git"
-  - "python -c \"import sdl2dll; print(sdl2dll.get_dllpath())\" > dllpath.txt"
-  - "set /p PYSDL2_DLL_PATH=<dllpath.txt"
+  #- "pip install git+https://github.com/a-hurst/pysdl2-dll.git"
+  #- "python -c \"import sdl2dll; print(sdl2dll.get_dllpath())\" > dllpath.txt"
+  #- "set /p PYSDL2_DLL_PATH=<dllpath.txt"
+  - "if [%ARCH%]==[32] vcpkg install sdl2_mixer:x86-windows sdl2_ttf:x86-windows sdl2_image:x86-windows sdl2_gfx:x86-windows"
+  - "if [%ARCH%]==[64] vcpkg install sdl2_mixer:x64-windows sdl2_ttf:x64-windows sdl2_image:x64-windows sdl2_gfx:x64-windows"
+  - "if [%ARCH%]==[32] set PYSDL2_DLL_PATH=C:\\tools\\vcpkg\\installed\\x86-windows\\bin"
+  - "if [%ARCH%]==[64] set PYSDL2_DLL_PATH=C:\\tools\\vcpkg\\installed\\x64-windows\\bin"
   - "pip install -U numpy pytest"
   - "pip install ."
 
