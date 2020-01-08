@@ -87,7 +87,10 @@ class SDLSurfaceTest(unittest.TestCase):
         good_combos = []
         tenbit = [pixels.SDL_PACKEDLAYOUT_2101010, pixels.SDL_PACKEDLAYOUT_1010102]
         for idx in pixels.ALL_PIXELFORMATS:
+            pfmt = pixels.SDL_AllocFormat(idx)
             for fmt in pixels.ALL_PIXELFORMATS:
+                idx_name = pixels.SDL_GetPixelFormatName(idx).decode('utf-8')
+                fmt_name = pixels.SDL_GetPixelFormatName(fmt).decode('utf-8')
                 # Some pixel format conversions aren't supported in SDL2, so we skip those
                 for f in (idx, fmt):
                     if pixels.SDL_ISPIXELFORMAT_FOURCC(f) or pixels.SDL_PIXELLAYOUT(f) in tenbit:
@@ -98,11 +101,6 @@ class SDLSurfaceTest(unittest.TestCase):
                 # SDL2 doesn't support converting from indexed formats w/ 4 bpp
                 if pixels.SDL_PIXELTYPE(fmt) == pixels.SDL_PIXELTYPE_INDEX4:
                     continue
-
-                idx_name = pixels.SDL_GetPixelFormatName(idx).decode('utf-8')
-                fmt_name = pixels.SDL_GetPixelFormatName(fmt).decode('utf-8')
-                pfmt = pixels.SDL_AllocFormat(idx)
-
                 bpp = c_int()
                 rmask, gmask, bmask, amask = Uint32(), Uint32(), Uint32(), Uint32()
                 ret = pixels.SDL_PixelFormatEnumToMasks(fmt, byref(bpp),
