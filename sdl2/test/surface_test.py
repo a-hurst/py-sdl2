@@ -127,7 +127,7 @@ class SDLSurfaceTest(unittest.TestCase):
 
     def test_SDL_ConvertSurfaceFormat(self):
         for pfmt in pixels.ALL_PIXELFORMATS:
-            if pixels.SDL_ISPIXELFORMAT_FOURCC(pfmt) or pixels.SDL_BITSPERPIXEL(idx) < 8:
+            if pixels.SDL_ISPIXELFORMAT_FOURCC(pfmt) or pixels.SDL_BITSPERPIXEL(pfmt) < 8:
                 continue
             for fmt in pixels.ALL_PIXELFORMATS:
                 if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
