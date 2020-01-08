@@ -91,10 +91,11 @@ class SDLSurfaceTest(unittest.TestCase):
             for fmt in pixels.ALL_PIXELFORMATS:
                 idx_name = pixels.SDL_GetPixelFormatName(idx).decode('utf-8')
                 fmt_name = pixels.SDL_GetPixelFormatName(fmt).decode('utf-8')
-                # Some pixel format conversions aren't supported in SDL2, so we skip those
-                for f in (idx, fmt):
-                    if pixels.SDL_ISPIXELFORMAT_FOURCC(f) or pixels.SDL_PIXELLAYOUT(f) in tenbit:
-                        continue
+                # SDL2 doesn't support converting fancier formats (e.g YUV, 10bit)
+                if pixels.SDL_ISPIXELFORMAT_FOURCC(idx) or pixels.SDL_PIXELLAYOUT(idx) in tenbit:
+                    continue
+                if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt) or pixels.SDL_PIXELLAYOUT(fmt) in tenbit:
+                    continue
                 # SDL2 doesn't support converting to formats w/ less than 8 bpp
                 if pixels.SDL_BITSPERPIXEL(idx) < 8:
                     continue
