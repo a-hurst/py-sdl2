@@ -106,12 +106,12 @@ class SDLSurfaceTest(unittest.TestCase):
                 #self.assertTrue(csf)
                 if error.SDL_GetError() == b'Blit combination not supported':
                     bad_combos.append('{0} -> {1}'.format(fmt_name, idx_name))
-                self.assertIsInstance(csf.contents, surface.SDL_Surface)
+                #self.assertIsInstance(csf.contents, surface.SDL_Surface)
                 surface.SDL_FreeSurface(sf)
                 surface.SDL_FreeSurface(csf)
             pixels.SDL_FreeFormat(pfmt)
-        print('\n'.join(bad_combos))
-
+            
+        self.assertEqual(len(bad_combos), 0)
         #######################################################################
         # sf = surface.create_rgb_surface(10, 10, 32, 0, 0, 0)
         # self.assertRaises((AttributeError, TypeError),
