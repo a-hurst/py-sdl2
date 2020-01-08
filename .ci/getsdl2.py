@@ -115,6 +115,6 @@ def getDLLs(platform_name, version):
 
 
 if __name__ == '__main__':
-    version = os.environ('PYSDL2_DLL_VERSION')
+    version = os.getenv('PYSDL2_DLL_VERSION')
     if version:
         getDLLs(get_platform(), version)
