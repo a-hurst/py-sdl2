@@ -84,6 +84,8 @@ class SDLSurfaceTest(unittest.TestCase):
 
     def test_SDL_ConvertSurface(self):
         bad_combos = []
+        good_combos = []
+        error.SDL_ClearError()
         for idx in pixels.ALL_PIXELFORMATS:
             if pixels.SDL_ISPIXELFORMAT_FOURCC(idx) or pixels.SDL_BITSPERPIXEL(idx) < 8:
                 continue
@@ -106,11 +108,14 @@ class SDLSurfaceTest(unittest.TestCase):
                 #self.assertTrue(csf)
                 if error.SDL_GetError() == b'Blit combination not supported':
                     bad_combos.append('{0} -> {1}'.format(fmt_name, idx_name))
+                    error.SDL_ClearError()
+                else:
+                    good_combos.append('{0} -> {1}'.format(fmt_name, idx_name))
                 #self.assertIsInstance(csf.contents, surface.SDL_Surface)
                 surface.SDL_FreeSurface(sf)
                 surface.SDL_FreeSurface(csf)
             pixels.SDL_FreeFormat(pfmt)
-            
+
         self.assertEqual(len(bad_combos), 0)
         #######################################################################
         # sf = surface.create_rgb_surface(10, 10, 32, 0, 0, 0)
