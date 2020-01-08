@@ -90,6 +90,8 @@ class SDLSurfaceTest(unittest.TestCase):
             for fmt in pixels.ALL_PIXELFORMATS:
                 if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
                     continue
+                idx_name = pixels.SDL_GetPixelFormatName(idx)
+                fmt_name = pixels.SDL_GetPixelFormatName(fmt)
                 bpp = c_int()
                 rmask, gmask, bmask, amask = Uint32(), Uint32(), Uint32(), Uint32()
                 ret = pixels.SDL_PixelFormatEnumToMasks(fmt, byref(bpp),
@@ -132,6 +134,8 @@ class SDLSurfaceTest(unittest.TestCase):
             for fmt in pixels.ALL_PIXELFORMATS:
                 if pixels.SDL_ISPIXELFORMAT_FOURCC(fmt):
                     continue
+                pfmt_name = pixels.SDL_GetPixelFormatName(pfmt)
+                fmt_name = pixels.SDL_GetPixelFormatName(fmt)
                 bpp = c_int()
                 rmask, gmask, bmask, amask = Uint32(), Uint32(), Uint32(), Uint32()
                 ret = pixels.SDL_PixelFormatEnumToMasks(fmt, byref(bpp),
