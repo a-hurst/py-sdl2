@@ -2,6 +2,11 @@ language: python
 
 matrix:
  include:
+    - os: linux
+      python: 2.7
+      sudo: required
+      env: PYSDL2_DLL_VERSION=2.0.10
+      before_install: sudo apt-get build-dep libsdl2 libsdl2-mixer libsdl2-ttf libsdl2-image libsdl2-gfx
     - name: "Python 3.7 on macOS w/ latest SDL2"
       os: osx
       language: shell
@@ -17,7 +22,7 @@ matrix:
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.8
       before_install: export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH"
-    - name: "Python 3.7 on macOS w/ SDL2 2.0.6"
+    - name: "Python 3.7 on macOS w/ SDL2 2.0.7"
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.7
@@ -44,7 +49,7 @@ matrix:
 install:
   - python -m pip install --upgrade pip
   - python .ci/getsdl2.py
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PYSDL2_DLL_PATH=$(pwd)/dlls; fi 
+  - export PYSDL2_DLL_PATH=$(pwd)/dlls
   - python -m pip install --upgrade numpy pytest
   - python -m pip install .
 

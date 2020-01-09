@@ -4,6 +4,7 @@ import shutil
 import subprocess as sub
 from zipfile import ZipFile 
 from distutils.util import get_platform
+import subprocess as sub
 
 try:
     from urllib.request import urlopen # Python 3.x
@@ -110,9 +111,45 @@ def getDLLs(platform_name, version):
                         
     else:
 
-        # Download source?
-        pass
+        suffix = '.zip' # source code
+        basedir = os.getcwd()
 
+        libdir = 'sdlprefix'
+        if os.path.isdir(libdir):
+            shutil.rmtree(libdir)
+        os.mkdir(libdir)
+
+        for lib in libraries:
+            
+            # Download zip archive containing source
+            libversion = libversions[version][lib]
+            dllzip = urlopen(sdl2_urls[lib].format(libversion, suffix))
+            outpath = os.path.join('temp', lib + '.zip')
+            with open(outpath, 'wb') as out:
+                out.write(dllzip.read())
+            
+            # Extract dlls and license files from archive
+            sourcepath = os.path.join(dllpath, lib)
+            with ZipFile(outpath, 'r') as z:
+                z.extractall(path=sourcepath)
+
+            # Build the library
+            buildcmds = [
+                ['./configure', '--prefix=../../sdlprefix'],
+                ['make'],
+                ['make', 'install']
+            ]
+            os.chdir(sourcepath)
+            for cmd in buildcmds:
+                p = sub.Popen(cmd, stdout=sys.stdout, stderr=sys.stderr)
+                p.communicate()
+
+            # Reset working dir
+            os.chdir(basedir)
+
+        # Copy compiled libs to folder
+        shutil.copytree('sdlprefix/lib', 'dlls')
+            
 
 if __name__ == '__main__':
     version = os.getenv('PYSDL2_DLL_VERSION')
