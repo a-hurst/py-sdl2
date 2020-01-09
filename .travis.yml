@@ -6,7 +6,9 @@ matrix:
       python: 2.7
       sudo: required
       env: PYSDL2_DLL_VERSION=2.0.10
-      before_install: sudo apt-get build-dep libsdl2 libsdl2-mixer libsdl2-ttf libsdl2-image libsdl2-gfx
+      before_install:
+        - sudo apt-get build-dep libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0
+        - sudo apt-get build-dep libsdl2-image-2.0-0 libsdl2-gfx-1.0-0
     - name: "Python 3.7 on macOS w/ latest SDL2"
       os: osx
       language: shell
