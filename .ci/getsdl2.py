@@ -153,15 +153,19 @@ def getDLLs(platform_name, version):
                 p.communicate()
                 if p.returncode != 0:
                     raise RuntimeError("Error building {0}".fomrmat(lib))
+            os.chdir(basedir)
 
             # Copy built library to dll folder and reset working dir
             print('\n======= {0} {1} built sucessfully =======\n'.format(lib, libversion))
             for f in os.listdir(os.path.join(libdir, 'lib')):
                 if f == "lib{0}.so".format(lib):
                     fpath = os.path.join(libdir, 'lib', f)
+                    if os.path.islink(fpath):
+                        fpath = os.path.realpath(fpath)
                     shutil.copy(fpath, dlldir)
-                
-            os.chdir(basedir)
+
+        print("Installed binaries:")
+        print(os.listdir(dlldir))
             
 
 if __name__ == '__main__':
