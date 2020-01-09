@@ -2,26 +2,26 @@ language: python
 
 matrix:
  include:
-    - name: "Python 3.7.3 on macOS w/ latest SDL2"
+    - name: "Python 3.7 on macOS w/ latest SDL2"
       os: osx
       language: shell
-      osx_image: xcode10.2
       env: PYSDL2_DLL_VERSION=2.0.10
-    - name: "Python 2.7.14 on macOS w/ latest SDL2"
+      before_install: brew install python && brew link python
+    - name: "Python 2.7 on macOS w/ latest SDL2"
       os: osx
       language: shell
-      osx_image: xcode9.3
       env: PYSDL2_DLL_VERSION=2.0.10
-    - name: "Python 3.7.3 on macOS w/ SDL2 2.0.8"
+      before_install: brew install python@2 && brew link python@2
+    - name: "Python 3.7 on macOS w/ SDL2 2.0.8"
       os: osx
       language: shell
-      osx_image: xcode10.2
       env: PYSDL2_DLL_VERSION=2.0.8
-    - name: "Python 3.7.3 on macOS w/ SDL2 2.0.6"
+      before_install: brew install python && brew link python
+    - name: "Python 3.7 on macOS w/ SDL2 2.0.6"
       os: osx
       language: shell
-      osx_image: xcode10.2
       env: PYSDL2_DLL_VERSION=2.0.6
+      before_install: brew install python && brew link python
 #  allow_failures:
 #    - os: linux
 #      sudo: required
@@ -36,22 +36,17 @@ matrix:
 #      language: shell
 #      env: PYVER=2
 
-before_install:
+#before_install:
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-gfx-1.0-0; fi
+#  - pip install git+https://github.com/a-hurst/pysdl2-dll.git
+#  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print(sdl2dll.get_dllpath())")
+
+install:
   - python -m pip install --upgrade pip
   - python .ci/getsdl2.py
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PYSDL2_DLL_PATH=$(pwd)/dlls; fi 
   - python -m pip install --upgrade numpy pytest
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-gfx-1.0-0; fi
-#  - pip install -U pip
-#  - pip install git+https://github.com/a-hurst/pysdl2-dll.git
-#  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print(sdl2dll.get_dllpath())")
-# - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_ttf sdl2_mixer sdl2_image sdl2_gfx; fi
-#  - git clone -b manylinux2014 https://github.com/pypa/manylinux.git
-
-install:
   - python -m pip install .
-#  - python -m pip install --upgrade pip
-#  - python -m pip install cibuildwheel==1.1.0
 
 #script:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh .ci/venv-osx.sh; fi
