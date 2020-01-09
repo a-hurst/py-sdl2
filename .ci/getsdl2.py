@@ -129,7 +129,7 @@ def getDLLs(platform_name, version):
                 out.write(dllzip.read())
             
             # Extract dlls and license files from archive
-            sourcepath = os.path.join(dllpath, lib)
+            sourcepath = os.path.join('temp', lib)
             with ZipFile(outpath, 'r') as z:
                 z.extractall(path=sourcepath)
 
