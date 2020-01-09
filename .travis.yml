@@ -6,22 +6,22 @@ matrix:
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.10
-      before_install: brew link python
-    - name: "Python 2.7 on macOS w/ latest SDL2"
-      os: osx
-      language: shell
-      env: PYSDL2_DLL_VERSION=2.0.10
-      before_install: brew link python@2
+      before_install: brew unlink python@2 && brew unlink python && brew link python 
+#    - name: "Python 2.7 on macOS w/ latest SDL2"
+#      os: osx
+#      language: shell
+#      env: PYSDL2_DLL_VERSION=2.0.10
+#      before_install: brew link python@2
     - name: "Python 3.7 on macOS w/ SDL2 2.0.8"
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.8
-      before_install: brew link python
+      before_install: brew unlink python@2 && brew unlink python && brew link python 
     - name: "Python 3.7 on macOS w/ SDL2 2.0.6"
       os: osx
       language: shell
-      env: PYSDL2_DLL_VERSION=2.0.6
-      before_install: brew link python
+      env: PYSDL2_DLL_VERSION=2.0.7
+      before_install: brew unlink python@2 && brew unlink python && brew link python 
 #  allow_failures:
 #    - os: linux
 #      sudo: required
