@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+import tarfile
 import subprocess as sub
 from zipfile import ZipFile 
 from distutils.util import get_platform
@@ -111,31 +112,34 @@ def getDLLs(platform_name, version):
                         
     else:
 
-        suffix = '.zip' # source code
+        suffix = '.tar.gz' # source code
         basedir = os.getcwd()
 
-        libdir = 'sdlprefix'
+        libdir = os.path.join(basedir, 'sdlprefix')
         if os.path.isdir(libdir):
             shutil.rmtree(libdir)
         os.mkdir(libdir)
 
         for lib in libraries:
-            
-            # Download zip archive containing source
+
             libversion = libversions[version][lib]
-            dllzip = urlopen(sdl2_urls[lib].format(libversion, suffix))
-            outpath = os.path.join('temp', lib + '.zip')
-            with open(outpath, 'wb') as out:
-                out.write(dllzip.read())
+            print('\n***** Downloading {0} {1} *****\n'.format(lib, libversion))
             
-            # Extract dlls and license files from archive
-            sourcepath = os.path.join('temp', lib)
-            with ZipFile(outpath, 'r') as z:
-                z.extractall(path=sourcepath)
+            # Download tar archive containing source
+            srctar = urlopen(sdl2_urls[lib].format(libversion, suffix))
+            outpath = os.path.join('temp', lib + suffix)
+            with open(outpath, 'wb') as out:
+                out.write(srctar.read())
+            
+            # Extract source from archive
+            sourcepath = os.path.join('temp', lib + '-' + libversion)
+            with tarfile.open(outpath, 'r:gz') as z:
+                z.extractall(path='temp')
 
             # Build the library
+            print('\n***** Compiling {0} {1} *****\n'.format(lib, libversion))
             buildcmds = [
-                ['./configure', '--prefix=../../sdlprefix'],
+                ['./configure', '--prefix={0}'.format(libdir)],
                 ['make'],
                 ['make', 'install']
             ]
@@ -143,12 +147,17 @@ def getDLLs(platform_name, version):
             for cmd in buildcmds:
                 p = sub.Popen(cmd, stdout=sys.stdout, stderr=sys.stderr)
                 p.communicate()
+                if p.returncode != 0:
+                    raise RuntimeError("Error building {0}".fomrmat(lib))
 
-            # Reset working dir
+            # Copy built library to dll folder and reset working dir
+            print('\n***** {0} {1} built sucessfully *****\n'.format(lib, libversion))
+            for f in os.listdir(os.path.join(libdir, 'lib')):
+                if f == "lib{0}.so".format(lib):
+                    fpath = os.path.join(libdir, 'lib', f)
+                    shutil.copy(fpath, dlldir)
+                
             os.chdir(basedir)
-
-        # Copy compiled libs to folder
-        shutil.copytree('sdlprefix/lib', 'dlls')
             
 
 if __name__ == '__main__':
