@@ -54,7 +54,7 @@ cache:
 
 install:
   - python -m pip install --upgrade pip
-  - if [[ ! -d dlls ]]; then python .ci/getsdl2.py; fi
+  - if [[ -z "$(ls -A dlls)" ]]; then python .ci/getsdl2.py; fi
   - export PYSDL2_DLL_PATH=$(pwd)/dlls
   - python -m pip install --upgrade numpy pytest
   - python -m pip install .
