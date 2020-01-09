@@ -113,6 +113,7 @@ def getDLLs(platform_name, version):
     else:
 
         suffix = '.tar.gz' # source code
+        gfxsrc = 'http://www.ferzkopp.net/Software/SDL2_gfx/SDL2_gfx-{0}.tar.gz'
         basedir = os.getcwd()
 
         libdir = os.path.join(basedir, 'sdlprefix')
@@ -123,10 +124,13 @@ def getDLLs(platform_name, version):
         for lib in libraries:
 
             libversion = libversions[version][lib]
-            print('\n***** Downloading {0} {1} *****\n'.format(lib, libversion))
+            print('\n======= Downloading {0} {1} =======\n'.format(lib, libversion))
             
             # Download tar archive containing source
-            srctar = urlopen(sdl2_urls[lib].format(libversion, suffix))
+            liburl = sdl2_urls[lib].format(libversion, suffix)
+            if lib == 'SDL2_gfx':
+                liburl = gfxsrc.format(libversion)
+            srctar = urlopen(liburl)
             outpath = os.path.join('temp', lib + suffix)
             with open(outpath, 'wb') as out:
                 out.write(srctar.read())
@@ -137,7 +141,7 @@ def getDLLs(platform_name, version):
                 z.extractall(path='temp')
 
             # Build the library
-            print('\n***** Compiling {0} {1} *****\n'.format(lib, libversion))
+            print('======= Compiling {0} {1} =======\n'.format(lib, libversion))
             buildcmds = [
                 ['./configure', '--prefix={0}'.format(libdir)],
                 ['make'],
@@ -151,7 +155,7 @@ def getDLLs(platform_name, version):
                     raise RuntimeError("Error building {0}".fomrmat(lib))
 
             # Copy built library to dll folder and reset working dir
-            print('\n***** {0} {1} built sucessfully *****\n'.format(lib, libversion))
+            print('\n======= {0} {1} built sucessfully =======\n'.format(lib, libversion))
             for f in os.listdir(os.path.join(libdir, 'lib')):
                 if f == "lib{0}.so".format(lib):
                     fpath = os.path.join(libdir, 'lib', f)
