@@ -2,9 +2,9 @@ language: python
 
 matrix:
 #  fast_finish: true
-  include:
+# include:
     #- os: linux
-    - services: docker
+#    - services: docker
 #      dist: bionic
 #      sudo: required
 #      python: 2.7
@@ -30,9 +30,26 @@ matrix:
 #    - os: osx
 #      language: shell
 #      env: PYVER=3
-    - os: osx
+    - name: "Python 3.7.3 on macOS w/ latest SDL2"
+      os: osx
       language: shell
-      env: PYVER=2
+      osx_image: xcode10.2
+      env: PYSDL2_DLL_VERSION=2.0.10
+    - name: "Python 2.7.14 on macOS w/ latest SDL2"
+      os: osx
+      language: shell
+      osx_image: xcode9.3
+      env: PYSDL2_DLL_VERSION=2.0.10
+    - name: "Python 3.7.3 on macOS w/ SDL2 2.0.8"
+      os: osx
+      language: shell
+      osx_image: xcode10.2
+      env: PYSDL2_DLL_VERSION=2.0.8
+    - name: "Python 3.7.3 on macOS w/ SDL2 2.0.6"
+      os: osx
+      language: shell
+      osx_image: xcode10.2
+      env: PYSDL2_DLL_VERSION=2.0.6
 #  allow_failures:
 #    - os: linux
 #      sudo: required
@@ -48,32 +65,37 @@ matrix:
 #      env: PYVER=2
 
 before_install:
+  - python -m pip install --upgrade pip
+  - python .ci/getsdl2.py
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PYSDL2_DLL_PATH=$(pwd)/dlls; fi 
+  - python -m pip install --upgrade numpy pytest
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-gfx-1.0-0; fi
 #  - pip install -U pip
 #  - pip install git+https://github.com/a-hurst/pysdl2-dll.git
 #  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print(sdl2dll.get_dllpath())")
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_ttf sdl2_mixer sdl2_image sdl2_gfx; fi
-  - git clone -b manylinux2014 https://github.com/pypa/manylinux.git
+# - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_ttf sdl2_mixer sdl2_image sdl2_gfx; fi
+#  - git clone -b manylinux2014 https://github.com/pypa/manylinux.git
 
 install:
-  - python -m pip install --upgrade pip
-  - python -m pip install cibuildwheel==1.1.0
+  - python -m pip install .
+#  - python -m pip install --upgrade pip
+#  - python -m pip install cibuildwheel==1.1.0
 
-script:
+#script:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh .ci/venv-osx.sh; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source pysdl2-venv/bin/activate; fi
-  - python -m cibuildwheel --output-dir wheelhouse
+#  - python -m cibuildwheel --output-dir wheelhouse
 
 env:
   global:
   - SDL_VIDEODRIVER=dummy
   - SDL_AUDIODRIVER=dummy
   - SDL_RENDER_DRIVER=software
-  - CIBW_TEST_REQUIRES='numpy pytest'
-  - CIBW_TEST_COMMAND='pytest -v'
-  - CIBW_MANYLINUX_X86_64_IMAGE=manylinux2014
-  - CIBW_MANYLINUX_I686_IMAGE=manylinux2014
-  - CIBW_BEFORE_BUILD_LINUX='chmod +x ./.ci/install-linux-deps.sh && /bin/bash ./.ci/install-linux-deps.sh'
+  #- CIBW_TEST_REQUIRES='numpy pytest'
+  #- CIBW_TEST_COMMAND='pytest -v'
+  #- CIBW_MANYLINUX_X86_64_IMAGE=manylinux2014
+  #- CIBW_MANYLINUX_I686_IMAGE=manylinux2014
+  #- CIBW_BEFORE_BUILD_LINUX='chmod +x ./.ci/install-linux-deps.sh && /bin/bash ./.ci/install-linux-deps.sh'
 
-#script:
-#  - python -B -m pytest -v
+script:
+  - python -B -m pytest -vvl
