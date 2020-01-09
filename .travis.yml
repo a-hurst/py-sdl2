@@ -6,7 +6,7 @@ matrix:
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.10
-      before_install: brew unlink python@2 && brew unlink python && brew link python 
+      before_install: export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH"
 #    - name: "Python 2.7 on macOS w/ latest SDL2"
 #      os: osx
 #      language: shell
@@ -16,12 +16,12 @@ matrix:
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.8
-      before_install: brew unlink python@2 && brew unlink python && brew link python 
+      before_install: export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH"
     - name: "Python 3.7 on macOS w/ SDL2 2.0.6"
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.7
-      before_install: brew unlink python@2 && brew unlink python && brew link python 
+      before_install: export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH"
 #  allow_failures:
 #    - os: linux
 #      sudo: required
