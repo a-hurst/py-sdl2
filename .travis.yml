@@ -48,9 +48,13 @@ matrix:
 #  - pip install git+https://github.com/a-hurst/pysdl2-dll.git
 #  - export PYSDL2_DLL_PATH=$(python -c "import sdl2dll; print(sdl2dll.get_dllpath())")
 
+cache:
+  directories:
+    - dlls
+
 install:
   - python -m pip install --upgrade pip
-  - python .ci/getsdl2.py
+  - if [[ ! -d dlls ]]; then python .ci/getsdl2.py; fi
   - export PYSDL2_DLL_PATH=$(pwd)/dlls
   - python -m pip install --upgrade numpy pytest
   - python -m pip install .
