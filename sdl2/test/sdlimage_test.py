@@ -2,15 +2,19 @@ import os
 import sys
 import ctypes
 import unittest
+import pytest
 from sdl2 import SDL_Init, SDL_Quit, version, surface, rwops, render
 
 try:
     from sdl2 import sdlimage
     _HASSDLIMAGE=True
+    v = sdlimage.IMG_Linked_Version().contents
+    libversion = v.major * 1000 + v.minor * 100 + v.patch
 except:
     _HASSDLIMAGE=False
 
 is32bit = sys.maxsize <= 2**32
+ismacos = sys.platform == "darwin"
 
 formats = ["bmp",
            "cur",
@@ -33,7 +37,8 @@ formats = ["bmp",
            ]
 
 # As of SDL2_image 2.0.5, XCF support seems to be broken on 32-bit builds
-if not is32bit:
+# XCF support is also broken in official SDL2_image macOS .frameworks
+if not (is32bit or ismacos):
     formats.append("xcf")
 
 
@@ -171,8 +176,8 @@ class SDLImageTest(unittest.TestCase):
     def test_IMG_LoadTyped_RW(self):
         fname = "surfacetest.%s"
         for fmt in formats:
-            if fmt == "webp":
-                continue
+            #if fmt == "webp":
+            #    continue
             filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     "resources", fname % fmt)
             with open(filename, "rb") as fp:
@@ -285,7 +290,7 @@ class SDLImageTest(unittest.TestCase):
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
-    @unittest.skipIf(is32bit, "XCF broken on 32-bit as of SDL_image 2.0.5")
+    @pytest.mark.xfail(is32bit or ismacos, "XCF currently broken on 32-bit and macOS")
     def test_IMG_LoadXCF_RW(self):
         fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                "resources", "surfacetest.xcf"), "rb")
@@ -455,6 +460,7 @@ class SDLImageTest(unittest.TestCase):
                 else:
                     self.assertFalse(sdlimage.IMG_isWEBP(imgrw))
 
+    @pytest.mark.xfail(ismacos, "XCF currently broken on macOS")
     def test_IMG_isXCF(self):
         fname = "surfacetest.%s"
         for fmt in formats:
