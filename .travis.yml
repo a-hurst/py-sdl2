@@ -7,7 +7,7 @@ env:
   - SDL_RENDER_DRIVER=software
 
 matrix:
- include:
+  include:
     - os: linux
       python: 2.7
       sudo: required
