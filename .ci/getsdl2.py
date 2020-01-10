@@ -152,7 +152,7 @@ def getDLLs(platform_name, version):
                 p = sub.Popen(cmd, stdout=sys.stdout, stderr=sys.stderr)
                 p.communicate()
                 if p.returncode != 0:
-                    raise RuntimeError("Error building {0}".fomrmat(lib))
+                    raise RuntimeError("Error building {0}".format(lib))
             os.chdir(basedir)
 
             # Copy built library to dll folder and reset working dir
