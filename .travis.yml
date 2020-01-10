@@ -12,39 +12,72 @@ matrix:
       python: 2.7
       sudo: required
       env: PYSDL2_DLL_VERSION=2.0.10
+
+    - os: linux
+      python: 3.5
+      sudo: required
+      env: PYSDL2_DLL_VERSION=2.0.10
+
+    - os: linux
+      python: 3.6
+      sudo: required
+      env: PYSDL2_DLL_VERSION=2.0.10
+
+    - os: linux
+      python: 3.7
+      sudo: required
+      env: PYSDL2_DLL_VERSION=2.0.10
+
+    - os: linux
+      python: 3.8
+      sudo: required
+      env: PYSDL2_DLL_VERSION=2.0.10
+
+    - os: linux
+      python: pypy
+      sudo: required
+      env: PYSDL2_DLL_VERSION=2.0.10
+
+    - os: linux
+      python: pypy3
+      sudo: required
+      env: PYSDL2_DLL_VERSION=2.0.10
+
     - name: "Python 3.7 on macOS w/ latest Homebrew SDL2"
       os: osx
       language: shell
       before_install: 
         - export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH" # sets Python to 3.x
         - brew install sdl2 sdl2_mixer sdl2_ttf sdl2_image sdl2_gfx
+
     - name: "Python 3.7 on macOS w/ latest SDL2"
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.10
       before_install: export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH"
-#    - name: "Python 2.7 on macOS w/ latest SDL2"
-#      os: osx
-#      language: shell
-#      env: PYSDL2_DLL_VERSION=2.0.10
-#      before_install: brew link python@2
+
+    - name: "Python 2.7 on macOS w/ latest SDL2"
+      os: osx
+      language: shell
+      env: PYSDL2_DLL_VERSION=2.0.10
+      before_install: brew link python@2
+
     - name: "Python 3.7 on macOS w/ SDL2 2.0.8"
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.8
       before_install: export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH"
+
     - name: "Python 3.7 on macOS w/ SDL2 2.0.7"
       os: osx
       language: shell
       env: PYSDL2_DLL_VERSION=2.0.7
       before_install: export PATH="/usr/local/opt/python/libexec/bin:/usr/local/bin:$PATH"
-#  allow_failures:
-#    - os: linux
-#      sudo: required
-#      python: pypy
-#    - os: linux
-#      sudo: required
-#      python: pypy3
+
+  allow_failures:
+    - python: pypy
+    - python: pypy3
+    - os: osx
 
 # NOTE: This only gets run on Linux, since we override this step on macOS
 before_install:
