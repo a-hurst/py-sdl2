@@ -78,7 +78,7 @@ class SDLImageTest(unittest.TestCase):
             surface.SDL_FreeSurface(sf)
 
     def test_IMG_Load_RW(self):
-        skip = ['webp', 'tga']
+        skip = []#'webp', 'tga']
         fname = "surfacetest.%s"
         for fmt in formats:
             if fmt in skip:
@@ -93,7 +93,7 @@ class SDLImageTest(unittest.TestCase):
     def test_IMG_LoadTexture(self):
         sf = surface.SDL_CreateRGBSurface(0, 10, 10, 32, 0, 0, 0, 0)
         rd = render.SDL_CreateSoftwareRenderer(sf)
-        skip = ['webp', 'svg']
+        skip = []#'webp', 'svg']
         fname = "surfacetest.%s"
         for fmt in formats:
             if fmt in skip:
@@ -125,7 +125,7 @@ class SDLImageTest(unittest.TestCase):
     def test_IMG_LoadTexture_RW(self):
         sf = surface.SDL_CreateRGBSurface(0, 10, 10, 32, 0, 0, 0, 0)
         rd = render.SDL_CreateSoftwareRenderer(sf)
-        skip = ['svg', 'webp', 'tga'] # TGA not supported, others broken
+        skip = ['tga']#, 'svg', 'webp'] # TGA not supported, others broken
         fname = "surfacetest.%s"
         for fmt in formats:
             if fmt in skip:
@@ -145,7 +145,7 @@ class SDLImageTest(unittest.TestCase):
     def test_IMG_LoadTextureTyped_RW(self):
         sf = surface.SDL_CreateRGBSurface(0, 10, 10, 32, 0, 0, 0, 0)
         rd = render.SDL_CreateSoftwareRenderer(sf)
-        skip = ['webp', 'svg']
+        skip = []#'webp', 'svg']
         fname = "surfacetest.%s"
         for fmt in formats:
             if fmt in skip:
@@ -178,104 +178,104 @@ class SDLImageTest(unittest.TestCase):
                 surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadBMP_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.bmp"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.bmp"), "rb")
         sf = sdlimage.IMG_LoadBMP_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadCUR_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.cur"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.cur"), "rb")
         sf = sdlimage.IMG_LoadCUR_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadGIF_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.gif"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.gif"), "rb")
         sf = sdlimage.IMG_LoadGIF_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadICO_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.ico"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.ico"), "rb")
         sf = sdlimage.IMG_LoadICO_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadJPG_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.jpg"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.jpg"), "rb")
         sf = sdlimage.IMG_LoadJPG_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadLBM_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.lbm"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.lbm"), "rb")
         sf = sdlimage.IMG_LoadLBM_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadPCX_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.pcx"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.pcx"), "rb")
         sf = sdlimage.IMG_LoadPCX_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadPNG_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.png"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.png"), "rb")
         sf = sdlimage.IMG_LoadPNG_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadPNM_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.pnm"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.pnm"), "rb")
         sf = sdlimage.IMG_LoadPNM_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadSVG_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.svg"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.svg"), "rb")
         sf = sdlimage.IMG_LoadSVG_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadTGA_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.tga"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.tga"), "rb")
         sf = sdlimage.IMG_LoadTGA_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadTIF_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.tif"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.tif"), "rb")
         sf = sdlimage.IMG_LoadTIF_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadWEBP_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.webp"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.webp"), "rb")
         sf = sdlimage.IMG_LoadWEBP_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
@@ -283,16 +283,16 @@ class SDLImageTest(unittest.TestCase):
 
     @pytest.mark.xfail(is32bit or ismacos, reason="XCF currently broken on 32-bit and macOS")
     def test_IMG_LoadXCF_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.xcf"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.xcf"), "rb")
         sf = sdlimage.IMG_LoadXCF_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
         surface.SDL_FreeSurface(sf)
 
     def test_IMG_LoadXPM_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.xpm"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.xpm"), "rb")
         sf = sdlimage.IMG_LoadXPM_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
@@ -300,8 +300,8 @@ class SDLImageTest(unittest.TestCase):
 
     @unittest.skip("not implemented")
     def test_IMG_LoadXV_RW(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.xv"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.xv"), "rb")
         sf = sdlimage.IMG_LoadXV_RW(rwops.rw_from_object(fp))
         fp.close()
         self.assertIsInstance(sf.contents, surface.SDL_Surface)
@@ -492,8 +492,8 @@ class SDLImageTest(unittest.TestCase):
     @unittest.skipIf(hasattr(sys, "pypy_version_info"),
                      "PyPy's ctypes fails to pass a correct string array")
     def test_IMG_ReadXPMFromArray(self):
-        fp = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               "resources", "surfacetest.xpm"), "rb")
+        testdir = os.path.dirname(os.path.abspath(__file__))
+        fp = open(os.path.join(testdir, "resources", "surfacetest.xpm"), "rb")
         xpm = b""
         fp.readline()  # /* XPM */
         fp.readline()  # static char * surfacetest_xpm[] = {
