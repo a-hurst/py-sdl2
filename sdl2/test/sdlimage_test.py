@@ -78,7 +78,7 @@ class SDLImageTest(unittest.TestCase):
             surface.SDL_FreeSurface(sf)
 
     def test_IMG_Load_RW(self):
-        skip = []#'webp', 'tga']
+        skip = ['tga']#, 'webp']
         fname = "surfacetest.%s"
         for fmt in formats:
             if fmt in skip:
@@ -125,7 +125,7 @@ class SDLImageTest(unittest.TestCase):
     def test_IMG_LoadTexture_RW(self):
         sf = surface.SDL_CreateRGBSurface(0, 10, 10, 32, 0, 0, 0, 0)
         rd = render.SDL_CreateSoftwareRenderer(sf)
-        skip = ['tga']#, 'svg', 'webp'] # TGA not supported, others broken
+        skip = ['svg', 'tga']#, 'webp'] # TGA not supported, others broken
         fname = "surfacetest.%s"
         for fmt in formats:
             if fmt in skip:
@@ -145,7 +145,7 @@ class SDLImageTest(unittest.TestCase):
     def test_IMG_LoadTextureTyped_RW(self):
         sf = surface.SDL_CreateRGBSurface(0, 10, 10, 32, 0, 0, 0, 0)
         rd = render.SDL_CreateSoftwareRenderer(sf)
-        skip = []#'webp', 'svg']
+        skip = ['svg']#, 'webp']
         fname = "surfacetest.%s"
         for fmt in formats:
             if fmt in skip:

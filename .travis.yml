@@ -77,8 +77,8 @@ matrix:
   allow_failures:
     - python: pypy
     - python: pypy3
-    - os: osx
-
+    - name: "Python 3.7 on macOS w/ latest Homebrew SDL2"
+    
 # NOTE: This only gets run on Linux, since we override this step on macOS
 before_install:
   - sudo apt-get -qq update
